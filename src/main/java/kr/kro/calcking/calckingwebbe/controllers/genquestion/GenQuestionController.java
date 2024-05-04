@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/get-question")
+@RequestMapping("/gen-question")
 public class GenQuestionController {
     private final GenQuestionService genQuestionService;
 
