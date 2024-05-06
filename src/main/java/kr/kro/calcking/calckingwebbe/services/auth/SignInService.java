@@ -2,7 +2,6 @@ package kr.kro.calcking.calckingwebbe.services.auth;
 
 import java.util.Optional;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.kro.calcking.calckingwebbe.dtos.auth.SignInDTO;
 import kr.kro.calcking.calckingwebbe.entities.UserEntity;
@@ -40,7 +39,8 @@ public class SignInService {
       String accessToken = jwtProvider.createAccessToken(user.get().getUID());
       String refreshToken = jwtProvider.createRefreshToken(user.get().getUID());
       userRepository.updateUserToken(user.get().getUID(), refreshToken);
-      addCookiesToResponse(accessToken, refreshToken, response);
+      cookieProvider.createCookie("accessToken", accessToken, 60 * 10, response);
+      cookieProvider.createCookie("refreshToken", refreshToken, 60 * 60 * 24 * 30, response);
     } catch (JwtException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
     } catch (Exception e) {
@@ -53,13 +53,5 @@ public class SignInService {
   private boolean isPasswordMatch(String rawPW, String encodedPW) {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     return bCryptPasswordEncoder.matches(rawPW, encodedPW);
-  }
-
-  private void addCookiesToResponse(String accessToken, String refreshToken, HttpServletResponse response)
-      throws Exception {
-    Cookie accessCookie = cookieProvider.createCookie("accessToken", accessToken, 60 * 10);
-    Cookie refreshCookie = cookieProvider.createCookie("refreshToken", refreshToken, 60 * 60 * 24 * 30);
-    response.addCookie(accessCookie);
-    response.addCookie(refreshCookie);
   }
 }
