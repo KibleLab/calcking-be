@@ -35,5 +35,4 @@ public class UserVerifyStringEntity {
   @OneToOne
   @JoinColumn(name = "u_id", referencedColumnName = "u_id")
   private UserEntity userEntity;
-
 }
