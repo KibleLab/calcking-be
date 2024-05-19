@@ -10,21 +10,19 @@ import jakarta.transaction.Transactional;
 import kr.kro.calcking.calckingwebbe.entities.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, String> {
-  @Query(value = "SELECT * FROM user WHERE u_id = :uID", nativeQuery = true)
-  public Optional<UserEntity> findUserByID(String uID);
-
+  // Create
   @Modifying
   @Transactional
   @Query(value = "INSERT INTO user (u_id, u_pw, u_name, u_birth, u_phone, u_email) VALUES (:uID, :uPW, :uName, :uBirth, :uPhone, :uEmail)", nativeQuery = true)
   public void createUser(String uID, String uPW, String uName, String uBirth, String uPhone, String uEmail);
 
-  @Modifying
-  @Transactional
-  @Query(value = "UPDATE user SET u_token = :uToken WHERE u_id = :uID", nativeQuery = true)
-  public void updateUserToken(String uID, String uToken);
+  // Read
+  @Query(value = "SELECT * FROM user WHERE u_id = :uID", nativeQuery = true)
+  public Optional<UserEntity> readUserByUID(String uID);
 
+  // Delete
   @Modifying
   @Transactional
-  @Query(value = "UPDATE user SET u_token = NULL WHERE u_id = :uID", nativeQuery = true)
-  public void deleteUserToken(String uID);
+  @Query(value = "DELETE FROM user WHERE u_id = :uID", nativeQuery = true)
+  public void deleteUserByUID(String uID);
 }
