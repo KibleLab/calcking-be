@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+// import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -40,7 +42,14 @@ public class UserEntity {
   @JsonProperty("u_birth")
   private String uBirth;
 
-  @Column(name = "u_token")
-  @JsonProperty("u_token")
-  private String uToken;
+  // @NotNull
+  // @OneToOne
+  // @JoinColumn(name = "u_role_id", referencedColumnName = "u_role_id")
+  // private UserRoleEntity userRoleEntity;
+
+  @OneToOne(mappedBy = "userEntity")
+  private UserTokenEntity userTokenEntity;
+
+  @OneToOne(mappedBy = "userEntity")
+  private UserVerifyStringEntity userVerifyStringEntity;
 }
