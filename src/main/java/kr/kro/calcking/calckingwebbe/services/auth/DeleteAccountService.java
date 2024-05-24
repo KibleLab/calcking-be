@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.kro.calcking.calckingwebbe.dtos.auth.DeleteUserDTO;
 import kr.kro.calcking.calckingwebbe.dtos.auth.ReadAccessTokenDTO;
 import kr.kro.calcking.calckingwebbe.entities.UserVerifyStringEntity;
-import kr.kro.calcking.calckingwebbe.providers.CookieProvider;
 import kr.kro.calcking.calckingwebbe.providers.JWTProvider;
 import kr.kro.calcking.calckingwebbe.providers.RandomStringProvider;
 import kr.kro.calcking.calckingwebbe.repositories.UserRepository;
@@ -29,7 +28,6 @@ public class DeleteAccountService {
   private final UserTokenRepository userTokenRepository;
   private final UserVerifyStringRepository userVerifyStringRepository;
   private final JWTProvider jwtProvider;
-  private final CookieProvider cookieProvider;
   private final RandomStringProvider randomStringProvider;
 
   // POST (/delete-account)
@@ -37,21 +35,6 @@ public class DeleteAccountService {
       ReadAccessTokenDTO readAccessTokenDTO,
       HttpServletRequest request, HttpServletResponse response) {
     Map<String, Object> responseMap = new HashMap<>();
-
-    // AccessToken 검증 로직
-    String accessToken = readAccessTokenDTO.getAccessToken();
-    String refreshToken = cookieProvider.getTokenFromCookie(cookieProvider.getCookie("refresh_token", request));
-    Date accessTokenIssuedAt = jwtProvider.getIssuedAtFromAccessToken(accessToken);
-    Date refreshTokenIssuedAt = jwtProvider.getIssuedAtFromRefreshToken(refreshToken);
-    if (jwtProvider.isExpiredAccessToken(readAccessTokenDTO.getAccessToken())) {
-      responseMap.put("message", "AccessToken이 만료되었습니다.");
-      responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
-    } else if (!accessTokenIssuedAt.equals(refreshTokenIssuedAt)) {
-      responseMap.put("message", "AccessToken이 유효하지 않습니다!");
-      responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
-    }
 
     // 인증번호 생성 로직
     String uID = jwtProvider.getUIDFromAccessToken(readAccessTokenDTO.getAccessToken());
@@ -73,21 +56,6 @@ public class DeleteAccountService {
       DeleteUserDTO deleteUserDTO,
       HttpServletRequest request, HttpServletResponse response) {
     Map<String, Object> responseMap = new HashMap<>();
-
-    // AccessToken 검증 로직
-    String accessToken = deleteUserDTO.getAccessToken();
-    String refreshToken = cookieProvider.getTokenFromCookie(cookieProvider.getCookie("refresh_token", request));
-    Date accessTokenIssuedAt = jwtProvider.getIssuedAtFromAccessToken(accessToken);
-    Date refreshTokenIssuedAt = jwtProvider.getIssuedAtFromRefreshToken(refreshToken);
-    if (jwtProvider.isExpiredAccessToken(deleteUserDTO.getAccessToken())) {
-      responseMap.put("message", "AccessToken이 만료되었습니다.");
-      responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
-    } else if (!accessTokenIssuedAt.equals(refreshTokenIssuedAt)) {
-      responseMap.put("message", "AccessToken이 유효하지 않습니다!");
-      responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
-    }
 
     // 인증번호 검증 로직
     String uID = jwtProvider.getUIDFromAccessToken(deleteUserDTO.getAccessToken());

@@ -1,6 +1,5 @@
 package kr.kro.calcking.calckingwebbe.services.auth;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,21 +28,6 @@ public class SignOutService {
       ReadAccessTokenDTO readAccessTokenDTO,
       HttpServletRequest request, HttpServletResponse response) {
     Map<String, Object> responseMap = new HashMap<>();
-
-    // AccessToken 검증 로직
-    String accessToken = readAccessTokenDTO.getAccessToken();
-    String refreshToken = cookieProvider.getTokenFromCookie(cookieProvider.getCookie("refresh_token", request));
-    Date accessTokenIssuedAt = jwtProvider.getIssuedAtFromAccessToken(accessToken);
-    Date refreshTokenIssuedAt = jwtProvider.getIssuedAtFromRefreshToken(refreshToken);
-    if (jwtProvider.isExpiredAccessToken(readAccessTokenDTO.getAccessToken())) {
-      responseMap.put("message", "AccessToken이 만료되었습니다.");
-      responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
-    } else if (!accessTokenIssuedAt.equals(refreshTokenIssuedAt)) {
-      responseMap.put("message", "AccessToken이 유효하지 않습니다!");
-      responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMap);
-    }
 
     // 로그아웃 로직
     Cookie refreshCookie = cookieProvider.getCookie("refresh_token", request);

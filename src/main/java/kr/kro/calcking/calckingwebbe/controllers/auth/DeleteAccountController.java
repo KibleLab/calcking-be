@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import kr.kro.calcking.calckingwebbe.annotations.ValidateAccessToken;
 import kr.kro.calcking.calckingwebbe.dtos.auth.DeleteUserDTO;
 import kr.kro.calcking.calckingwebbe.dtos.auth.ReadAccessTokenDTO;
 import kr.kro.calcking.calckingwebbe.services.auth.DeleteAccountService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class DeleteAccountController {
   private final DeleteAccountService deleteAccountService;
 
+  @ValidateAccessToken
   @GetMapping
   public ResponseEntity<Map<String, Object>> getVerifyString(
       @Valid @RequestBody ReadAccessTokenDTO readAccessTokenDTO,
@@ -31,6 +33,7 @@ public class DeleteAccountController {
     return deleteAccountService.getVerifyString(readAccessTokenDTO, request, response);
   }
 
+  @ValidateAccessToken
   @PostMapping
   public ResponseEntity<Map<String, Object>> deleteUser(
       @Valid @RequestBody DeleteUserDTO deleteUserDTO,
