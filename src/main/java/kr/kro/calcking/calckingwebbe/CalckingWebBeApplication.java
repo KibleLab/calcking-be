@@ -6,9 +6,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class CalckingWebBeApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(CalckingWebBeApplication.class, args);
 	}
-
 }
