@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.kro.calcking.calckingwebbe.dtos.auth.DeleteUserDTO;
-import kr.kro.calcking.calckingwebbe.dtos.auth.ReadAccessTokenDTO;
 import kr.kro.calcking.calckingwebbe.entities.UserVerifyStringEntity;
 import kr.kro.calcking.calckingwebbe.providers.JWTProvider;
 import kr.kro.calcking.calckingwebbe.providers.RandomStringProvider;
@@ -32,12 +31,11 @@ public class DeleteAccountService {
 
   // POST (/delete-account)
   public ResponseEntity<Map<String, Object>> getVerifyString(
-      ReadAccessTokenDTO readAccessTokenDTO,
       HttpServletRequest request, HttpServletResponse response) {
     Map<String, Object> responseMap = new HashMap<>();
 
     // 인증번호 생성 로직
-    String uID = jwtProvider.getUIDFromAccessToken(readAccessTokenDTO.getAccessToken());
+    String uID = jwtProvider.getUIDFromAccessToken(request.getHeader("Authorization").substring(7));
     String verifyString = randomStringProvider.getRandomString(8, true, true);
     Date expireAt = new Date(System.currentTimeMillis() + (1000 * 60 * 3));
     userVerifyStringRepository.deleteUserVerifyStringByUID(uID);
@@ -58,7 +56,7 @@ public class DeleteAccountService {
     Map<String, Object> responseMap = new HashMap<>();
 
     // 인증번호 검증 로직
-    String uID = jwtProvider.getUIDFromAccessToken(deleteUserDTO.getAccessToken());
+    String uID = jwtProvider.getUIDFromAccessToken(request.getHeader("Authorization").substring(7));
     Optional<UserVerifyStringEntity> userVerifyString = userVerifyStringRepository.readUserVerifyStringByUID(uID);
     if (userVerifyString.get().getUVerfyStringExpireAt().before(new Date())) {
       responseMap.put("message", "인증번호가 만료되었습니다!");

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.kro.calcking.calckingwebbe.dtos.auth.ReadAccessTokenDTO;
 import kr.kro.calcking.calckingwebbe.providers.CookieProvider;
 import kr.kro.calcking.calckingwebbe.providers.JWTProvider;
 import kr.kro.calcking.calckingwebbe.repositories.UserTokenRepository;
@@ -25,13 +24,14 @@ public class SignOutService {
 
   // POST (/sign-out)
   public ResponseEntity<Map<String, Object>> signOut(
-      ReadAccessTokenDTO readAccessTokenDTO,
       HttpServletRequest request, HttpServletResponse response) {
     Map<String, Object> responseMap = new HashMap<>();
 
     // 로그아웃 로직
     Cookie refreshCookie = cookieProvider.getCookie("refresh_token", request);
-    userTokenRepository.deleteUserTokenByUID(jwtProvider.getUIDFromAccessToken(readAccessTokenDTO.getAccessToken()));
+    userTokenRepository
+        .deleteUserTokenByUID(
+            jwtProvider.getUIDFromAccessToken(request.getHeader("Authorization").substring(7)));
     cookieProvider.deleteCookie(refreshCookie, response);
 
     // JSON 응답 로직

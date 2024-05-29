@@ -42,9 +42,9 @@ public class ReissueTokenService {
 
     // AccessToken 재발급 로직
     String nextAccessToken = jwtProvider.reissueAccessToken(nextRefreshToken);
+    response.addHeader("Authorization", "Bearer " + nextAccessToken);
 
     // JSON 응답 로직
-    responseMap.put("access_token", nextAccessToken);
     responseMap.put("message", "토큰 재발급 성공!");
     responseMap.put("status", String.valueOf(HttpStatus.CREATED));
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);

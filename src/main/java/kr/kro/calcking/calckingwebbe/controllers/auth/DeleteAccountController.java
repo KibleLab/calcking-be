@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.kro.calcking.calckingwebbe.annotations.ValidateAccessToken;
 import kr.kro.calcking.calckingwebbe.dtos.auth.DeleteUserDTO;
-import kr.kro.calcking.calckingwebbe.dtos.auth.ReadAccessTokenDTO;
 import kr.kro.calcking.calckingwebbe.services.auth.DeleteAccountService;
 import lombok.RequiredArgsConstructor;
 
@@ -28,9 +27,8 @@ public class DeleteAccountController {
   @ValidateAccessToken
   @GetMapping
   public ResponseEntity<Map<String, Object>> getVerifyString(
-      @Valid @RequestBody ReadAccessTokenDTO readAccessTokenDTO,
       HttpServletRequest request, HttpServletResponse response) {
-    return deleteAccountService.getVerifyString(readAccessTokenDTO, request, response);
+    return deleteAccountService.getVerifyString(request, response);
   }
 
   @ValidateAccessToken

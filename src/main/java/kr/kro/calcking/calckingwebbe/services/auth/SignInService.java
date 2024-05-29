@@ -26,6 +26,12 @@ public class SignInService {
   private final JWTProvider jwtProvider;
   private final CookieProvider cookieProvider;
 
+  // PW 일치 여부 확인 은닉 메서드
+  private boolean isPasswordMatch(String rawPW, String encodedPW) {
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    return bCryptPasswordEncoder.matches(rawPW, encodedPW);
+  }
+
   // POST (/sign-in)
   public ResponseEntity<Map<String, Object>> signIn(ReadUserDTO readUserDTO, HttpServletResponse response) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -50,17 +56,11 @@ public class SignInService {
 
     // AccessToken 발급 로직
     String accessToken = jwtProvider.issueAccessToken(user.get().getUID());
+    response.addHeader("Authorization", "Bearer " + accessToken);
 
     // JSON 응답 로직
-    responseMap.put("access_token", accessToken);
     responseMap.put("message", "로그인 성공!");
     responseMap.put("status", String.valueOf(HttpStatus.OK));
     return ResponseEntity.status(HttpStatus.OK).body(responseMap);
-  }
-
-  // PW 일치 여부 확인 은닉 메서드
-  private boolean isPasswordMatch(String rawPW, String encodedPW) {
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    return bCryptPasswordEncoder.matches(rawPW, encodedPW);
   }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.kro.calcking.calckingwebbe.annotations.ValidateAccessToken;
-import kr.kro.calcking.calckingwebbe.dtos.auth.ReadAccessTokenDTO;
 import kr.kro.calcking.calckingwebbe.providers.CookieProvider;
 import kr.kro.calcking.calckingwebbe.providers.JWTProvider;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +26,19 @@ public class ValidateAccessTokenAspect {
   private final CookieProvider cookieProvider;
   private final JWTProvider jwtProvider;
 
-  @Around("@annotation(validAccessToken)")
+  @Around("@annotation(validAccessToken)") // @ValidateAccessToken이 붙은 메서드에서만 실행
   public Object validAccessToken(ProceedingJoinPoint joinPoint, ValidateAccessToken validAccessToken)
       throws Throwable {
+    Map<String, Object> responseMap = new HashMap<>();
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
         .getRequest();
 
-    Map<String, Object> responseMap = new HashMap<>();
-
-    String accessToken = ((ReadAccessTokenDTO) joinPoint.getArgs()[0]).getAccessToken();
+    String accessToken = request.getHeader("Authorization").substring(7);
     String refreshToken = cookieProvider.getTokenFromCookie(cookieProvider.getCookie("refresh_token", request));
     Date accessTokenIssuedAt = jwtProvider.getIssuedAtFromAccessToken(accessToken);
     Date refreshTokenIssuedAt = jwtProvider.getIssuedAtFromRefreshToken(refreshToken);
 
+    // AccessToken 검증 로직
     if (jwtProvider.isExpiredAccessToken(accessToken)) {
       responseMap.put("message", "토큰이 유효하지 않거나 만료되었습니다!");
       responseMap.put("status", String.valueOf(HttpStatus.UNAUTHORIZED));
