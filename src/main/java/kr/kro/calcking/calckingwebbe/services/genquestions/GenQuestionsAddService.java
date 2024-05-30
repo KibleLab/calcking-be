@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import kr.kro.calcking.calckingwebbe.dtos.genquestions.add.CreateQuestionsAddDTO;
+import kr.kro.calcking.calckingwebbe.dtos.genquestions.CreateQuestionsAddDTO;
 import kr.kro.calcking.calckingwebbe.providers.RandomStringProvider;
 import kr.kro.calcking.calckingwebbe.repositories.QuestionsAddRepository;
 import lombok.RequiredArgsConstructor;
@@ -168,7 +168,7 @@ public class GenQuestionsAddService {
     long seed = System.nanoTime();
     Random random = new Random(seed);
     String questionsID = randomStringProvider.getRandomString(8, true, true);
-    String questionsTitle = "몇십 + 몇 ";
+    String questionsTitle = "몇십 + 몇";
     String questionsLevel = "A-2";
     List<Map<String, Object>> questions = new ArrayList<>();
     int numberOfQuestions = createQuestionsAddDTO.getNumberOfQuestions();
@@ -374,7 +374,7 @@ public class GenQuestionsAddService {
     long seed = System.nanoTime();
     Random random = new Random(seed);
     String questionsID = randomStringProvider.getRandomString(8, true, true);
-    String questionsTitle = "몇백 + 몇 ";
+    String questionsTitle = "몇백 + 몇";
     String questionsLevel = "A-3";
     List<Map<String, Object>> questions = new ArrayList<>();
     int numberOfQuestions = createQuestionsAddDTO.getNumberOfQuestions();
@@ -426,7 +426,7 @@ public class GenQuestionsAddService {
     long seed = System.nanoTime();
     Random random = new Random(seed);
     String questionsID = randomStringProvider.getRandomString(8, true, true);
-    String questionsTitle = "몇백 + 몇십몇 ";
+    String questionsTitle = "몇백 + 몇십몇";
     String questionsLevel = "A-3";
     List<Map<String, Object>> questions = new ArrayList<>();
     int numberOfQuestions = createQuestionsAddDTO.getNumberOfQuestions();
@@ -480,7 +480,7 @@ public class GenQuestionsAddService {
     long seed = System.nanoTime();
     Random random = new Random(seed);
     String questionsID = randomStringProvider.getRandomString(8, true, true);
-    String questionsTitle = "몇백몇십 + 몇 ";
+    String questionsTitle = "몇백몇십 + 몇";
     String questionsLevel = "A-4";
     List<Map<String, Object>> questions = new ArrayList<>();
     int numberOfQuestions = createQuestionsAddDTO.getNumberOfQuestions();
