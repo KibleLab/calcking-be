@@ -27,7 +27,8 @@ public class GenQuestionsAddService {
     return thous * 1000 + hunds * 100 + tens * 10 + units;
   }
 
-  // GET (/gen-questions/add/units-to-units) (몇 + 몇)
+  // GET (/gen-questions/add/units-to-units?numberOfQuestions=#&carry=#)
+  // (몇 + 몇)
   public ResponseEntity<Map<String, Object>> addUnits2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -91,7 +92,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/units-to-units-to-units) (몇 + 몇 + 몇)
+  // GET (/gen-questions/add/units-to-units-to-units?numberOfQuestions=#&carry=#)
+  // (몇 + 몇 + 몇)
   public ResponseEntity<Map<String, Object>> addUnits2Units2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -159,7 +161,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/tens-to-units) (몇십 + 몇)
+  // GET (/gen-questions/add/tens-to-units?numberOfQuestions=#&carry=#)
+  // (몇십 + 몇)
   public ResponseEntity<Map<String, Object>> addTens2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -212,7 +215,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/tens-units-to-units) (몇십몇 + 몇)
+  // GET (/gen-questions/add/tens-units-to-units?numberOfQuestions=#&carry=#)
+  // (몇십몇 + 몇)
   public ResponseEntity<Map<String, Object>> addTensUnits2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -282,7 +286,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/tens-units-to-tens-units) (몇십몇 + 몇십몇)
+  // GET (/gen-questions/add/tens-units-to-tens-units?numberOfQuestions=#&carry=#)
+  // (몇십몇 + 몇십몇)
   public ResponseEntity<Map<String, Object>> addTensUnits2TensUnits(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -365,7 +370,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-to-units) (몇백 + 몇)
+  // GET (/gen-questions/add/hunds-to-units?numberOfQuestions=#&carry=#)
+  // (몇백 + 몇)
   public ResponseEntity<Map<String, Object>> addHunds2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -417,7 +423,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-to-tens-units) (몇백 + 몇십몇)
+  // GET (/gen-questions/add/hunds-to-tens-units?numberOfQuestions=#&carry=#)
+  // (몇백 + 몇십몇)
   public ResponseEntity<Map<String, Object>> addHunds2TensUnits(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -471,7 +478,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-tens-to-units) (몇백몇십 + 몇)
+  // GET (/gen-questions/add/hunds-tens-to-units?numberOfQuestions=#&carry=#)
+  // (몇백몇십 + 몇)
   public ResponseEntity<Map<String, Object>> addHundsTens2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -525,7 +533,8 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-tens-to-tens-units) (몇백몇십 + 몇십몇)
+  // GET (/gen-questions/add/hunds-tens-to-tens-units?numberOfQuestions=#&carry=#)
+  // (몇백몇십 + 몇십몇)
   public ResponseEntity<Map<String, Object>> addHundsTens2TensUnits(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -597,7 +606,9 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-tens-units-to-units) (몇백몇십몇 + 몇)
+  // GET
+  // (/gen-questions/add/hunds-tens-units-to-units?numberOfQuestions=#&carry=#)
+  // (몇백몇십몇 + 몇)
   public ResponseEntity<Map<String, Object>> addHundsTensUnits2Units(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -669,7 +680,9 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-tens-units-to-tens-units) (몇백몇십몇 + 몇십몇)
+  // GET
+  // (/gen-questions/add/hunds-tens-units-to-tens-units?numberOfQuestions=#&carry=#)
+  // (몇백몇십몇 + 몇십몇)
   public ResponseEntity<Map<String, Object>> addHundsTensUnits2TensUnits(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -755,7 +768,9 @@ public class GenQuestionsAddService {
     return ResponseEntity.status(HttpStatus.CREATED).body(responseMap);
   }
 
-  // GET (/gen-questions/add/hunds-tens-units-to-hunds-tens-units) (몇백몇십몇 + 몇백몇십몇)
+  // GET
+  // (/gen-questions/add/hunds-tens-units-to-hunds-tens-units?numberOfQuestions=#&carry=#)
+  // (몇백몇십몇 + 몇백몇십몇)
   public ResponseEntity<Map<String, Object>> addHundsTensUnits2HundsTensUnits(
       CreateQuestionsAddDTO createQuestionsAddDTO, HttpServletRequest request) {
     Map<String, Object> responseMap = new HashMap<>();

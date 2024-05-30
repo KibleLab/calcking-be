@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class GenAnswerService {
   private final QuestionsAddRepository questionsAddRepository;
 
-  // GET (/gen-answers/add?q_id=#)
+  // GET (/gen-answers/add?questionsID=#)
   public Optional<QuestionsAddDocument> genAnswersAdd(ReadAnswersDTO readAnswersDTO) {
     return questionsAddRepository.readQuestionsAddByQuestionsID(readAnswersDTO.getQuestionsID());
   }
