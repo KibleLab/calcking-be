@@ -1,4 +1,4 @@
-package kr.kro.calcking.calckingwebbe.dtos.genquestion.add;
+package kr.kro.calcking.calckingwebbe.dtos.genquestions.add;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

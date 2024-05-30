@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kr.kro.calcking.calckingwebbe.annotations.ValidateAccessToken;
-import kr.kro.calcking.calckingwebbe.dtos.genquestion.add.CreateQuestionsAddDTO;
+import kr.kro.calcking.calckingwebbe.dtos.genquestions.add.CreateQuestionsAddDTO;
 import kr.kro.calcking.calckingwebbe.services.genquestions.GenQuestionsAddService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
