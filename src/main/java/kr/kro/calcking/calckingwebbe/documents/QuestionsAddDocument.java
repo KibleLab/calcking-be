@@ -1,4 +1,4 @@
-package kr.kro.calcking.calckingwebbe.entities;
+package kr.kro.calcking.calckingwebbe.documents;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Data
 @Document(collection = "questions_add")
-public class QuestionsAddEntity {
+public class QuestionsAddDocument {
   @Id
   @Field(name = "questions_id")
   @JsonProperty("questions_id")

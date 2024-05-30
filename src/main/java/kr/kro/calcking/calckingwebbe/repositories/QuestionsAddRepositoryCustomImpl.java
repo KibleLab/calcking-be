@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
-import kr.kro.calcking.calckingwebbe.entities.QuestionsAddEntity;
+import kr.kro.calcking.calckingwebbe.documents.QuestionsAddDocument;
 
 @Repository
 public class QuestionsAddRepositoryCustomImpl implements QuestionsAddRepositoryCustom {
@@ -20,7 +20,7 @@ public class QuestionsAddRepositoryCustomImpl implements QuestionsAddRepositoryC
   @Override
   public void createQuestionsAdd(String questionsID, String questionsTitle, String questionsLevel,
       List<Map<String, Object>> questions) {
-    QuestionsAddEntity questionsEntity = new QuestionsAddEntity();
+    QuestionsAddDocument questionsEntity = new QuestionsAddDocument();
     questionsEntity.setQuestionsID(questionsID);
     questionsEntity.setQuestionsTitle(questionsTitle);
     questionsEntity.setQuestionsLevel(questionsLevel);
@@ -31,7 +31,7 @@ public class QuestionsAddRepositoryCustomImpl implements QuestionsAddRepositoryC
 
   // READ
   @Override
-  public Optional<QuestionsAddEntity> readQuestionsAddByQuestionsID(String questionsID) {
-    return Optional.of(mongoTemplate.findById(questionsID, QuestionsAddEntity.class));
+  public Optional<QuestionsAddDocument> readQuestionsAddByQuestionsID(String questionsID) {
+    return Optional.of(mongoTemplate.findById(questionsID, QuestionsAddDocument.class));
   }
 }

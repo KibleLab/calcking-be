@@ -6,14 +6,14 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import kr.kro.calcking.calckingwebbe.entities.QuestionsAddEntity;
+import kr.kro.calcking.calckingwebbe.documents.QuestionsAddDocument;
 
 public interface QuestionsAddRepository
-    extends MongoRepository<QuestionsAddEntity, String>, QuestionsAddRepositoryCustom {
+    extends MongoRepository<QuestionsAddDocument, String>, QuestionsAddRepositoryCustom {
   // CREATE
   public void createQuestionsAdd(String questionsID, String questionsTitle, String questionsLevel,
       List<Map<String, Object>> questions);
 
   // READ
-  public Optional<QuestionsAddEntity> readQuestionsAddByQuestionsID(String questionsID);
+  public Optional<QuestionsAddDocument> readQuestionsAddByQuestionsID(String questionsID);
 }
