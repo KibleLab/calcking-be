@@ -1,5 +1,6 @@
 package kr.kro.calcking.calckingwebbe.repositories;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class QuestionsAddRepositoryCustomImpl implements QuestionsAddRepositoryC
     questionsEntity.setQuestionsTitle(questionsTitle);
     questionsEntity.setQuestionsLevel(questionsLevel);
     questionsEntity.setQuestions(questions);
+    questionsEntity.setExpireAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 90));
     mongoTemplate.insert(questionsEntity);
   }
 
