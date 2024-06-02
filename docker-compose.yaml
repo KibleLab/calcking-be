@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  database:
+  mariadb:
     container_name: mariadb
     image: registryrok/mariadb:lts
     ports:
@@ -9,6 +9,22 @@ services:
     env_file: ./.envs/.env
     environment:
       TZ: Asia/Seoul
+    restart: always
+    networks:
+      - backend
+
+  application:
+    container_name: springboot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    env_file: ./.envs/.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE}
+    depends_on:
+      - mariadb
     restart: always
     networks:
       - backend
