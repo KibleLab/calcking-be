@@ -22,13 +22,13 @@ public class QuestionsAddRepositoryCustomImpl implements QuestionsAddRepositoryC
   @Override
   public void createQuestionsAdd(String questionsID, String questionsTitle, String questionsLevel,
       List<Map<String, Object>> questions) {
-    QuestionsAddDocument questionsEntity = new QuestionsAddDocument();
-    questionsEntity.setQuestionsID(questionsID);
-    questionsEntity.setQuestionsTitle(questionsTitle);
-    questionsEntity.setQuestionsLevel(questionsLevel);
-    questionsEntity.setQuestions(questions);
-    questionsEntity.setExpireAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 90));
-    mongoTemplate.insert(questionsEntity);
+    QuestionsAddDocument questionsAddDocument = new QuestionsAddDocument();
+    questionsAddDocument.setQuestionsID(questionsID);
+    questionsAddDocument.setQuestionsTitle(questionsTitle);
+    questionsAddDocument.setQuestionsLevel(questionsLevel);
+    questionsAddDocument.setQuestions(questions);
+    questionsAddDocument.setExpireAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 90));
+    mongoTemplate.insert(questionsAddDocument);
   }
 
   // READ
