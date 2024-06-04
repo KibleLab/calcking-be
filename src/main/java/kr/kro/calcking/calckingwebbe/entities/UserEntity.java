@@ -1,10 +1,11 @@
 package kr.kro.calcking.calckingwebbe.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-// import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -33,23 +34,17 @@ public class UserEntity {
   private String uPhone;
 
   @NotNull
-  @Column(name = "u_email")
-  @JsonProperty("u_email")
-  private String uEmail;
+  @OneToOne
+  @JoinColumn(name = "u_email", referencedColumnName = "u_email")
+  private UserEmailEntity userEmailEntity;
 
   @NotNull
   @Column(name = "u_birth", length = 8)
   @JsonProperty("u_birth")
   private String uBirth;
 
-  // @NotNull
-  // @OneToOne
-  // @JoinColumn(name = "u_role_id", referencedColumnName = "u_role_id")
-  // private UserRoleEntity userRoleEntity;
-
-  @OneToOne(mappedBy = "userEntity")
-  private UserTokenEntity userTokenEntity;
-
-  @OneToOne(mappedBy = "userEntity")
-  private UserVerifyStringEntity userVerifyStringEntity;
+  @NotNull
+  @OneToOne
+  @JoinColumn(name = "u_role_id", referencedColumnName = "u_role_id")
+  private UserRoleEntity userRoleEntity;
 }
