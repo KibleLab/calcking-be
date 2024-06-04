@@ -3,7 +3,10 @@ package kr.kro.calcking.calckingwebbe.dtos.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -37,4 +40,10 @@ public class CreateUserDTO {
   @NotBlank(message = "이메일을 입력해주세요.")
   @JsonProperty("u_email")
   private String uEmail;
+
+  @NotNull(message = "사용자 유형을 선택해주세요.")
+  @Min(value = 1, message = "사용자 유형을 선택해주세요.")
+  @Max(value = 5, message = "사용자 유형을 선택해주세요.")
+  @JsonProperty("u_role_id")
+  private int uRoleID;
 }
