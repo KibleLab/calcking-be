@@ -16,8 +16,8 @@ public class MDCInterceptor implements HandlerInterceptor {
       @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
     MDC.put("httpMethod", request.getMethod());
     MDC.put("requestUrl", request.getRequestURI());
-    MDC.put("httpVersion", request.getProtocol());
-    MDC.put("clientIp", request.getRemoteAddr());
+    MDC.put("httpVersion", request.getHeader("X-Forwarded-Proto").toUpperCase());
+    MDC.put("clientIp", request.getHeader("X-Real-IP"));
     MDC.put("userAgent", request.getHeader("User-Agent"));
 
     return true;
