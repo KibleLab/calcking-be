@@ -4,8 +4,8 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'kr.kro.calcking'
-version = '0.0.1-SNAPSHOT'
+group = 'xyz.calcking.api'
+version = '1.0.2-RELEASE'
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
