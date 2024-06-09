@@ -20,6 +20,6 @@ public class SwaggerConfig {
         return new Info()
                 .title("Calcking API")
                 .description("Calcking API Information")
-                .version("1.0.2-RELEASE");
+                .version("1.0.3-RELEASE");
     }
 }

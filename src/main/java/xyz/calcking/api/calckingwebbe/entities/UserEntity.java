@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -43,7 +44,7 @@ public class UserEntity {
   private String uBirth;
 
   @NotNull
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "u_role_id", referencedColumnName = "u_role_id")
   private UserRoleEntity userRoleEntity;
 }

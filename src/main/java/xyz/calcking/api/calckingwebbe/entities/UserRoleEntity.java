@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Data
@@ -21,7 +20,4 @@ public class UserRoleEntity {
   @Column(name = "u_role_name")
   @JsonProperty("u_role_name")
   private String uRoleName;
-
-  @OneToOne(mappedBy = "userRoleEntity")
-  private UserEntity userEntity;
 }
