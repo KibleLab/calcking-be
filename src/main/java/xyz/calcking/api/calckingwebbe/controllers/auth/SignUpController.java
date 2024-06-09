@@ -34,8 +34,9 @@ public class SignUpController {
 
   @PostMapping("/verify")
   public ResponseEntity<Map<String, Object>> verifyAuthCode(
-      @Valid @RequestBody ReadAuthCodeDTO readAuthCodeDTO, HttpServletRequest request) {
-    return signUpService.verifyAuthCode(readAuthCodeDTO, request);
+      @Valid @RequestBody ReadAuthCodeDTO readAuthCodeDTO,
+      HttpServletRequest request, HttpServletResponse response) {
+    return signUpService.verifyAuthCode(readAuthCodeDTO, request, response);
   }
 
   @PostMapping
