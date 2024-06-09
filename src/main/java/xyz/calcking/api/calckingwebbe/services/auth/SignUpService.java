@@ -56,10 +56,7 @@ public class SignUpService {
     sendEmail(readEmailDTO.getEmail(), authCode);
 
     // Email 토큰 발급
-    Map<String, Object> payload = new HashMap<>();
-    payload.put("Email", readEmailDTO.getEmail());
-    Date expireAt = new Date(System.currentTimeMillis() + (1000 * 60 * 3));
-    Optional<String> emailToken = tokenProvider.issueToken(payload, expireAt);
+    Optional<String> emailToken = issueEmailToken(readEmailDTO.getEmail(), 3, false);
     if (emailToken.isEmpty())
       return responseMap("토큰 발급 실패!", HttpStatus.INTERNAL_SERVER_ERROR);
     else
@@ -74,7 +71,7 @@ public class SignUpService {
 
   // POST (/sign-up/verify)
   public ResponseEntity<Map<String, Object>> verifyAuthCode(ReadAuthCodeDTO readAuthCodeDTO,
-      HttpServletRequest request) {
+      HttpServletRequest request, HttpServletResponse response) {
     // Email 토큰 검증
     Optional<Map<String, Object>> payload = tokenProvider.getPayloadFromToken(request.getHeader("Email"));
     if (payload.isEmpty())
@@ -94,6 +91,13 @@ public class SignUpService {
     else if (!authCodeDocument.get().getAuthCode().equals(authCode))
       return responseMap("인증번호가 일치하지 않습니다!", HttpStatus.BAD_REQUEST);
 
+    // Email 토큰 발급
+    Optional<String> emailToken = issueEmailToken(email, 5, true);
+    if (emailToken.isEmpty())
+      return responseMap("토큰 발급 실패!", HttpStatus.INTERNAL_SERVER_ERROR);
+    else
+      response.addHeader("Email", emailToken.get().toString());
+
     // Email 인증 완료 (Email 인증 여부: true)
     userEmailRepository.updateUserEmail(email, true);
 
@@ -109,6 +113,8 @@ public class SignUpService {
       return responseMap("토큰이 만료되었습니다!", HttpStatus.BAD_REQUEST);
     else if (!payload.get().get("Email").equals(createUserDTO.getUEmail()))
       return responseMap("토큰이 일치하지 않습니다!", HttpStatus.BAD_REQUEST);
+    else if (!payload.get().get("Verified").equals(true))
+      return responseMap("인증되지 않은 사용자 입니다!", HttpStatus.BAD_REQUEST);
 
     // Email 등록 및 인증 여부 검증
     String email = payload.get().get("Email").toString();
@@ -142,6 +148,16 @@ public class SignUpService {
         + "<p>인증번호는 대소문자, 숫자를 구분하여 정확히 입력하시기 바랍니다.</p>"
         + "<p>인증번호는 3분 후 만료됩니다.</p>";
     emailProvider.sendHtmlEmail(email, subject, htmlContents);
+  }
+
+  // Email 토큰 발급 은닉 메서드
+  private Optional<String> issueEmailToken(String email, int expireMinutes, boolean isVerified) {
+    Map<String, Object> payload = new HashMap<>();
+    payload.put("Email", email);
+    payload.put("Verified", isVerified);
+    Date expireAt = new Date(System.currentTimeMillis() + (1000 * 60 * expireMinutes));
+    Optional<String> emailToken = tokenProvider.issueToken(payload, expireAt);
+    return Optional.ofNullable(emailToken.get().toString());
   }
 
   // PW 암호화 은닉 메서드
