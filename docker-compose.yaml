@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   mariadb:
     container_name: mariadb
@@ -9,7 +7,7 @@ services:
     env_file: ./.envs/.env
     environment:
       TZ: Asia/Seoul
-    restart: always
+    restart: unless-stopped
     networks:
       - backend
 
@@ -19,7 +17,7 @@ services:
     ports:
       - 27017:27017
     env_file: ./.envs/.env
-    restart: always
+    restart: unless-stopped
     networks:
       - backend
 
@@ -37,7 +35,7 @@ services:
     depends_on:
       - mariadb
       - mongodb
-    restart: always
+    restart: unless-stopped
     networks:
       - backend
 
