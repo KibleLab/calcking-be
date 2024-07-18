@@ -5,6 +5,7 @@ import xyz.calcking.api.providers.CookieProvider;
 import xyz.calcking.api.providers.TokenProvider;
 import xyz.calcking.api.repositories.TokenRepository;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Date;
@@ -41,23 +42,41 @@ public class ValidateAccessTokenAspect {
     ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
     HttpServletRequest request = servletRequestAttributes.getRequest();
 
-    // 토큰 추출
-    String accessToken = request.getHeader("Authorization").substring(7);
-    String refreshToken = cookieProvider.getTokenFromCookie(cookieProvider.getCookie("refresh_token", request));
-    Optional<Date> accessTokenIssuedAt = tokenProvider.getIssuedAtFromToken(accessToken);
-    Optional<Date> refreshTokenIssuedAt = tokenProvider.getIssuedAtFromToken(refreshToken);
-    if (accessTokenIssuedAt.isEmpty() || refreshTokenIssuedAt.isEmpty())
-      return responseMap("토큰이 유효하지 않습니다!", HttpStatus.UNAUTHORIZED);
+    Cookie refreshCookie = cookieProvider.getCookie("refresh_token", request);
+    Cookie accessCookie = cookieProvider.getCookie("access_token", request);
+    // refreshCookie가 존재할 경우
+    if (refreshCookie != null) {
+      String refreshToken = cookieProvider.getTokenFromCookie(refreshCookie);
 
-    // RefreshToken 검증 로직
-    if (tokenRepository.readToken(refreshToken).isEmpty())
-      return responseMap("토큰이 만료되었습니다!", HttpStatus.UNAUTHORIZED);
+      // RefreshToken 발급 시간 확인
+      Optional<Date> refreshTokenIssuedAt = tokenProvider.getIssuedAtFromToken(refreshToken);
+      if (refreshTokenIssuedAt.isEmpty())
+        return responseMap("토큰이 유효하지 않습니다!", HttpStatus.UNAUTHORIZED);
 
-    // AccessToken 검증 로직
-    if (tokenProvider.isExpiredToken(accessToken).get().booleanValue())
-      return responseMap("토큰이 만료되었습니다!", HttpStatus.UNAUTHORIZED);
-    else if (!accessTokenIssuedAt.equals(refreshTokenIssuedAt))
-      return responseMap("토큰 발급 시간이 일치하지 않습니다!", HttpStatus.UNAUTHORIZED);
+      // DB에 RefreshToken 존재 여부 확인
+      if (tokenRepository.readToken(refreshToken).isEmpty())
+        return responseMap("토큰이 존재하지 않습니다!", HttpStatus.UNAUTHORIZED);
+
+      // accessCookie가 존재할 경우
+      if (accessCookie != null) {
+        String accessToken = cookieProvider.getTokenFromCookie(accessCookie);
+
+        // AccessToken 발급 시간 확인
+        Optional<Date> accessTokenIssuedAt = tokenProvider.getIssuedAtFromToken(accessToken);
+        if (accessTokenIssuedAt.isEmpty() || refreshTokenIssuedAt.isEmpty())
+          return responseMap("토큰이 유효하지 않습니다!", HttpStatus.UNAUTHORIZED);
+
+        // Token 발급 시간 일치 여부 확인
+        if (accessTokenIssuedAt.get().equals(refreshTokenIssuedAt.get()))
+          return responseMap("토큰이 발급 시간이 일치하지 않습니다!", HttpStatus.UNAUTHORIZED);
+
+        // AccessToken 만료 여부 확인
+        if (tokenProvider.isExpiredToken(accessToken).get().booleanValue())
+          return responseMap("토큰이 만료되었습니다!", HttpStatus.UNAUTHORIZED);
+      } else
+        return responseMap("토큰이 존재하지 않습니다!", HttpStatus.UNAUTHORIZED);
+    } else
+      return responseMap("토큰이 존재하지 않습니다!", HttpStatus.UNAUTHORIZED);
 
     return joinPoint.proceed();
   }

@@ -41,15 +41,16 @@ public class SignInService {
     // Token Payload 생성
     Map<String, Object> payload = new HashMap<>();
     payload.put("ID", user.get().getUID());
+    payload.put("ROLE", user.get().getUserRoleEntity().getURoleID());
 
     // RefreshToken 발급
-    Date refreshTokenExpireAt = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 15));
+    Date refreshTokenExpireAt = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7));
     Optional<String> refreshToken = tokenProvider.issueToken(payload, refreshTokenExpireAt);
     if (refreshToken.isEmpty())
       return responseMap("토큰 발급 실패!", HttpStatus.INTERNAL_SERVER_ERROR);
     else {
       tokenRepository.createToken(refreshToken.get(), refreshTokenExpireAt, user.get().getUID());
-      cookieProvider.createCookie("refresh_token", refreshToken.get(), 60 * 60 * 24 * 15, response);
+      cookieProvider.createCookie("refresh_token", refreshToken.get().toString(), 60 * 60 * 24 * 7, response);
     }
 
     // AccessToken 발급
@@ -58,7 +59,7 @@ public class SignInService {
     if (accessToken.isEmpty())
       return responseMap("토큰 발급 실패!", HttpStatus.INTERNAL_SERVER_ERROR);
     else
-      response.addHeader("Authorization", "Bearer " + accessToken.get().toString());
+      cookieProvider.createCookie("access_token", accessToken.get().toString(), 60 * 15, response);
 
     // 성공 응답
     return responseMap("로그인 성공!", HttpStatus.OK);

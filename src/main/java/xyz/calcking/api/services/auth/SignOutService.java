@@ -25,11 +25,14 @@ public class SignOutService {
   // POST (/sign-out)
   public ResponseEntity<Map<String, Object>> signOut(HttpServletRequest request, HttpServletResponse response) {
     // 로그아웃
+    Cookie accessCookie = cookieProvider.getCookie("access_token", request);
     Cookie refreshCookie = cookieProvider.getCookie("refresh_token", request);
-    String refreshToken = cookieProvider.getTokenFromCookie(refreshCookie);
     if (refreshCookie != null) {
-      cookieProvider.deleteCookie(refreshCookie, response);
+      String refreshToken = cookieProvider.getTokenFromCookie(refreshCookie);
       tokenRepository.deleteToken(refreshToken);
+      if (accessCookie != null)
+        cookieProvider.deleteCookie(accessCookie, response);
+      cookieProvider.deleteCookie(refreshCookie, response);
     }
 
     // 성공 응답

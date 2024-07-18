@@ -26,7 +26,7 @@ public class TokenService {
   private final CookieProvider cookieProvider;
   private final TokenProvider tokenProvider;
 
-  // POST (/reissue-token)
+  // GET (/token/reissue)
   public ResponseEntity<Map<String, Object>> reissueToken(HttpServletRequest request, HttpServletResponse response) {
     Cookie refreshCookie = cookieProvider.getCookie("refresh_token", request);
     String prevRefreshToken = cookieProvider.getTokenFromCookie(refreshCookie);
@@ -36,13 +36,13 @@ public class TokenService {
       return responseMap("토큰이 만료되었습니다!", HttpStatus.UNAUTHORIZED);
 
     // RefreshToken 재발급 로직
-    Date refreshTokenExpireAt = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 15));
+    Date refreshTokenExpireAt = new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7));
     Optional<String> nextRefreshToken = tokenProvider.reissueToken(prevRefreshToken, refreshTokenExpireAt);
     if (nextRefreshToken.isEmpty())
       return responseMap("토큰 재발급 실패!", HttpStatus.INTERNAL_SERVER_ERROR);
     else {
       tokenRepository.updateToken(prevRefreshToken, nextRefreshToken.get().toString(), refreshTokenExpireAt);
-      cookieProvider.createCookie("refresh_token", nextRefreshToken.get().toString(), 60 * 60 * 24 * 15, response);
+      cookieProvider.createCookie("refresh_token", nextRefreshToken.get().toString(), 60 * 60 * 24 * 7, response);
     }
 
     // AccessToken 재발급 로직
@@ -51,7 +51,7 @@ public class TokenService {
     if (nextAccessToken.isEmpty())
       return responseMap("토큰 재발급 실패!", HttpStatus.INTERNAL_SERVER_ERROR);
     else
-      response.addHeader("Authorization", "Bearer " + nextAccessToken.get().toString());
+      cookieProvider.createCookie("access_token", nextAccessToken.get().toString(), 60 * 15, response);
 
     // JSON 응답 로직
     return responseMap("토큰 재발급 성공!", HttpStatus.CREATED);
