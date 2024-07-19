@@ -21,19 +21,24 @@ public class MDCInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(
       @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-    boolean isDevProfile = environment.acceptsProfiles(Profiles.of("dev"));
-    boolean isProdProfile = environment.acceptsProfiles(Profiles.of("prod"));
+    boolean isLocalProfile = environment.acceptsProfiles(Profiles.of("local"));
 
-    MDC.put("httpMethod", request.getMethod());
-    MDC.put("requestUrl", request.getRequestURI());
-    MDC.put("userAgent", request.getHeader("User-Agent"));
-    if (isDevProfile) {
-      MDC.put("httpVersion", request.getProtocol());
-      MDC.put("clientIp", request.getRemoteAddr());
-    } else if (isProdProfile) {
-      MDC.put("httpVersion", request.getHeader("X-Forwarded-Proto"));
-      MDC.put("clientIp", request.getHeader("X-Real-IP"));
-    }
+    // 요청 정보
+    String method = request.getMethod(); // HTTP 메소드
+    String requestURI = request.getRequestURI(); // 요청 URI
+    String scheme = (isLocalProfile) ? request.getScheme().toUpperCase()
+        : request.getHeader("X-Forwarded-Proto").toUpperCase(); // 프로토콜(http/https)
+    String remoteAddr = (isLocalProfile) ? request.getRemoteAddr() : request.getHeader("X-Real-IP"); // 클라이언트 IP
+    String protocol = request.getProtocol(); // HTTP 버전
+    String userAgent = request.getHeader("User-Agent"); // 사용자 에이전트
+
+    // MDC 설정
+    MDC.put("method", method);
+    MDC.put("requestURI", requestURI);
+    MDC.put("scheme", scheme);
+    MDC.put("remoteAddr", remoteAddr);
+    MDC.put("protocol", protocol);
+    MDC.put("userAgent", userAgent);
 
     return true;
   }
@@ -42,10 +47,11 @@ public class MDCInterceptor implements HandlerInterceptor {
   public void afterCompletion(
       @NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler,
       @Nullable Exception ex) {
-    MDC.remove("httpMethod");
-    MDC.remove("requestUrl");
-    MDC.remove("httpVersion");
-    MDC.remove("clientIp");
+    MDC.remove("method");
+    MDC.remove("requestURI");
+    MDC.remove("scheme");
+    MDC.remove("remoteAddr");
+    MDC.remove("protocol");
     MDC.remove("userAgent");
     MDC.clear();
   }
